@@ -1273,10 +1273,11 @@ sp<Layer> SurfaceFlinger::createNormalSurface(
         format = PIXEL_FORMAT_RGBA_8888;
         break;
     case PIXEL_FORMAT_OPAQUE:
+
 #ifdef USE_16BPPSURFACE_FOR_OPAQUE
         format = PIXEL_FORMAT_RGB_565;
 #else
-        format = PIXEL_FORMAT_RGBX_8888;
+         format = PIXEL_FORMAT_RGBX_8888;
 #endif
         break;
     }
@@ -2021,7 +2022,9 @@ status_t SurfaceFlinger::turnElectronBeamOffImplLocked(int32_t mode)
     glEnable(GL_SCISSOR_TEST);
     hw.flip( Region(hw.bounds()) );
 
-    //hw.setCanDraw(false);
+#ifndef DO_NOT_SET_CAN_DRAW
+    hw.setCanDraw(false);
+#endif
     return NO_ERROR;
 }
 
@@ -2063,7 +2066,7 @@ status_t SurfaceFlinger::turnElectronBeamOff(int32_t mode)
 status_t SurfaceFlinger::turnElectronBeamOnImplLocked(int32_t mode)
 {
     DisplayHardware& hw(graphicPlane(0).editDisplayHardware());
-#if 0
+#ifndef DO_NOT_SET_CAN_DRAW
     if (hw.canDraw()) {
         // we're already on
         return NO_ERROR;
